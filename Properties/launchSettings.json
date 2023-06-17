@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "WashingtonRP": {
+      "commandName": "Project"
+    },
+    "Build": {
+      "commandName": "Executable",
+      "executablePath": "C:\\Users\\rippr\\Documents\\server\\samp-server.exe",
+      "workingDirectory": "C:\\Users\\rippr\\Documents\\server"
+    }
+  }
+}

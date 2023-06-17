@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <BaseOutputPath>C:\Users\rippr\Documents\server\gamemode</BaseOutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="NewFolder1\**" />
+      <EmbeddedResource Remove="NewFolder1\**" />
+      <None Remove="NewFolder1\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MySql.Data" Version="8.0.33" />
+        <PackageReference Include="SampSharp.GameMode" Version="0.10.1" />
+        <PackageReference Include="SampSharp.MapAndreas" Version="1.0.0" />
+        <PackageReference Include="SampSharp.MapZones" Version="0.1.0" />
+        <PackageReference Include="SampSharp.RakNet" Version="1.0.2" />
+        <PackageReference Include="SampSharp.Streamer" Version="0.10.0" />
+        <PackageReference Include="SampSharp.Streamer.Entities" Version="0.10.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Modules\Permissions\" />
+    </ItemGroup>
+
+</Project>
