@@ -32,6 +32,9 @@ CREATE TABlE inventario (
 );
 
 ALTER TABLE personajes
+	ADD Crack int(11) NOT NULL DEFAULT '0';
+
+ALTER TABLE personajes
 	ADD RightHand int(11) NOT NULL DEFAULT '0';
 
 ALTER TABLE personajes
@@ -52,6 +55,18 @@ ALTER TABLE inventario
 ALTER TABLE inventario
 	ADD SlotAmount5 int(11) NOT NULL DEFAULT '0' AFTER Slot5;
 
+ALTER TABLE personajes
+	ADD RightHandAmount int(11) NOT NULL DEFAULT '0' AFTER RightHand;
+ALTER TABLE personajes
+	ADD LeftHandAmount int(11) NOT NULL DEFAULT '0' AFTER LeftHand;
+ALTER TABLE personajes
+	ADD RightDoll int(11) NOT NULL DEFAULT '0';
+ALTER TABLE personajes
+	ADD RightDollAmount int(11) NOT NULL DEFAULT '0';
+ALTER TABLE personajes
+	ADD LeftDoll int(11) NOT NULL DEFAULT '0';
+ALTER TABLE personajes
+	ADD LeftDollAmount int(11) NOT NULL DEFAULT '0';
 
 ALTER TABLE cuentas
 	MODIFY ID int(11) NOT NULL AUTO_INCREMENT;

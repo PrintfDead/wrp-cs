@@ -1,7 +1,11 @@
 ﻿using SampSharp.Core;
-using System.Threading;
 using System;
 using WashingtonRP.Events;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Hosting;
+using WashingtonRP.Structures;
 
 namespace WashingtonRP
 {
@@ -13,22 +17,30 @@ namespace WashingtonRP
                 .Use<GameMode>()
                 .UseEncodingCodePage("cp1252")
                 .Run();
+            /*new HostBuilder()
+                .ConfigureAppConfiguration((context, config) =>
+                {
+                    config.Build();
+                })
+                .ConfigureServices((services) =>
+                {
+                    var serverVersion = new MySqlServerVersion(new Version(8, 0, 31));
 
-            int count = 1;
-
-            /* Console.SetCursorPosition(0, 0);
-            Console.Write($"thread 1: {count} of 100\n");
-            Console.Write($"thread 2: {count} of 100\n");
-            Console.Write("Esperando a cargar threads\n");
-
-            for (int i = 0; i < 50; i++) {
-                count++;
-                Thread.Sleep(1000);
-                Console.SetCursorPosition(0, 0);
-                Console.Write($"thread 1: {count} of 100");
-                Console.SetCursorPosition(0, 1);
-                Console.Write($"thread 2: {count} of 100");
-            }*/
+                    services.AddDbContext<WashingtonContext>(
+                    dbContextOptions => dbContextOptions
+                        .UseMySql("server=localhost;user=root;password=;database=washington", serverVersion)
+                        .LogTo(Console.WriteLine, LogLevel.Debug)
+                        .EnableSensitiveDataLogging()
+                        .EnableDetailedErrors()
+                    );
+                    Console.WriteLine(">>> Connection Washington Database");
+                })
+                .ConfigureLogging((context, logging) =>
+                {
+                    logging.AddConsole();
+                    logging.SetMinimumLevel(LogLevel.Debug);
+                })
+                .Build();*/
         }
     }
 }

@@ -13,7 +13,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="MySql.Data" Version="8.0.33" />
+        <PackageReference Include="EntityFramework" Version="6.4.4" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.32" />
+        <PackageReference Include="MySql.Data" Version="8.1.0" />
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.4" />
         <PackageReference Include="SampSharp.GameMode" Version="0.10.1" />
         <PackageReference Include="SampSharp.MapAndreas" Version="1.0.0" />
         <PackageReference Include="SampSharp.MapZones" Version="0.1.0" />
@@ -23,7 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Modules\Permissions\" />
+      <Folder Include="Modules\Callbacks\" />
     </ItemGroup>
 
 </Project>

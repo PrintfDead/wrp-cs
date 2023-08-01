@@ -1,11 +1,14 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.EntityFrameworkCore;
+using MySql.Data.MySqlClient;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.Display;
 using SampSharp.GameMode.Events;
 using SampSharp.GameMode.SAMP;
 using System;
 using System.Text.RegularExpressions;
+using WashingtonRP.Modules.Utils;
 using WashingtonRP.Structures;
+using WashingtonRP.Structures.Models;
 
 namespace WashingtonRP.Modules
 {
@@ -13,7 +16,7 @@ namespace WashingtonRP.Modules
     {
         public static void SelectDialog_Response(object sender, DialogResponseEventArgs e)
         {
-            var player = e.Player as PlayerData;
+            var player = e.Player as Player;
 
             if (e.DialogButton == DialogButton.Left)
             {
@@ -47,7 +50,7 @@ namespace WashingtonRP.Modules
 
         public static void RegisterDialog_Response(object sender, DialogResponseEventArgs e)
         {
-            PlayerData player = e.Player as PlayerData;
+            Player player = e.Player as Player;
             if (e.DialogButton == DialogButton.Left)
             {
                 if (e.InputText.Length <= 0)
@@ -58,7 +61,7 @@ namespace WashingtonRP.Modules
                     return;
                 }
 
-                if (!Functions.IsValidEmail(e.InputText))
+                if (!Account.IsValidEmail(e.InputText))
                 {
                     var registerDialog = new InputDialog("Register", $"{Color.Red}Error: {Color.White}Este email no es valido\n{Color.White}Introduce tu {Color.IndianRed}email {Color.White}para registrarte en la base de datos", false, "Aceptar", "Cancelar");
                     registerDialog.Response += RegisterDialog_Response;
@@ -66,7 +69,7 @@ namespace WashingtonRP.Modules
                     return;
                 }
 
-                if (Functions.CheckEmail(e.InputText))
+                if (Account.CheckEmail(e.InputText))
                 {
                     player.SendClientMessage("Este email ya fue registrado!");
 
@@ -76,8 +79,8 @@ namespace WashingtonRP.Modules
                     return;
                 }
 
-                player.Email = e.InputText;
-                var passwordDialog = new InputDialog("Register", $"{Color.White}Introduce tu ${Color.LightBlue}contraseña {Color.White}para registrarte en la base de datos", true, "Aceptar", "Cancelar");
+                player.aEmail = e.InputText;
+                var passwordDialog = new InputDialog("Register", $"{Color.White}Introduce tu {Color.LightBlue}contraseña {Color.White}para registrarte en la base de datos", true, "Aceptar", "Cancelar");
                 passwordDialog.Response += Register2Dialog_Response;
                 passwordDialog.Show(player);
             }
@@ -94,7 +97,7 @@ namespace WashingtonRP.Modules
 
         public static void Register2Dialog_Response(object sender, DialogResponseEventArgs e)
         {
-            PlayerData player = e.Player as PlayerData;
+            Player player = e.Player as Player;
 
             if (e.DialogButton == DialogButton.Left)
             {
@@ -124,7 +127,7 @@ namespace WashingtonRP.Modules
                     return;
                 }
 
-                player.Password = Functions.HashingPassword(e.InputText);
+                player.aPassword = Account.HashingPassword(e.InputText);
 
                 var registerDialog = new InputDialog("Register", $"{Color.White}Introduce un {Color.LightBlue}nombre de usuario {Color.White}para registrarte en la base de datos", false, "Aceptar", "Cancelar");
                 registerDialog.Response += Register3Dialog_Response;
@@ -139,7 +142,7 @@ namespace WashingtonRP.Modules
 
         public static void Register3Dialog_Response(object sender, DialogResponseEventArgs e)
         {
-            var player = e.Player as PlayerData;
+            var player = e.Player as Player;
 
             if (e.DialogButton == DialogButton.Left)
             {
@@ -159,7 +162,7 @@ namespace WashingtonRP.Modules
                     return;
                 }
 
-                if (Functions.CheckUsername(e.InputText))
+                if (Account.CheckUsername(e.InputText))
                 {
                     var registerDialog = new InputDialog("Register", $"{Color.Red}Error: {Color.White}Este nombre de usuario ya esta registrado\n{Color.White}Introduce un {Color.LightBlue}nombre de usuario {Color.White}para registrarte en la base de datos", true, "Aceptar", "Cancelar");
                     registerDialog.Response += Register3Dialog_Response;
@@ -167,24 +170,28 @@ namespace WashingtonRP.Modules
                     return;
                 }
 
-                player.aName = (string)e.InputText;
-                player.Ip = player.IP;
+                player.aName = e.InputText;
+                player.aIP = player.IP;
 
-                var connection = new MySqlConnection("server=localhost; database=washington; user=root; password=;");
-                connection.Open();
+                WashingtonContext context = new WashingtonContext(new DbContextOptions<WashingtonContext>());
 
-                var query = new MySqlCommand($"INSERT INTO cuentas (Name, Password, Email, IP) VALUES ('{player.aName}', '{player.Password}', '{player.Email}', '{player.Ip}');", connection);
-                query.ExecuteNonQuery();
+                var account = context.Accounts
+                    .Add(new AccountModel
+                    {
+                        Name = player.aName,
+                        Password = player.aPassword,
+                        Email = player.aEmail,
+                        Ip = player.IP
+                    });
+                context.SaveChanges();
 
-                connection.Close();
-
-                player.aID = (int)query.LastInsertedId;
+                player.aID = (int)account.GetDatabaseValues()["ID"];
 
                 Console.WriteLine(">>> Se inserto la cuenta en la base de datos");
 
-                Functions.ClearChat(player);
+                Characters.ClearChat(player);
 
-                var characters = Functions.GetCharacters(player);
+                var characters = Characters.GetCharacters(player);
 
                 var dialog = new ListDialog("Selecciona un Personaje.", "Siguiente", "Salir");
 
@@ -202,7 +209,7 @@ namespace WashingtonRP.Modules
 
         public static void LoginDialog_Response(object sender, DialogResponseEventArgs e)
         {
-            PlayerData player = e.Player as PlayerData;
+            Player player = e.Player as Player;
 
             if (e.DialogButton == DialogButton.Left)
             {
@@ -214,7 +221,7 @@ namespace WashingtonRP.Modules
                     return;
                 }
 
-                if (!Functions.IsValidEmail(e.InputText))
+                if (!Account.IsValidEmail(e.InputText))
                 {
                     var loginDialog = new InputDialog("Login", $"{Color.Red}Error: {Color.White}Este email no es valido\n{Color.White}Introduce tu {Color.IndianRed}email {Color.White}para identificarte en la base de datos", false, "Aceptar", "Cancelar");
                     loginDialog.Response += LoginDialog_Response;
@@ -222,7 +229,9 @@ namespace WashingtonRP.Modules
                     return;
                 }
 
-                if (!Functions.CheckEmail(e.InputText))
+                new MessageDialog("Espera...", "Estamos cargando tu cuenta, enseguida se mostrara el dialogo para colocar tu contraseña (NO cerrar el dialogo mientras carga la cuenta.)", "Espera.").Show(player);
+
+                if (!Account.CheckEmail(e.InputText))
                 {
                     var loginDialog = new InputDialog("Login", $"{Color.Red}Error: {Color.White}Este email no se encuentra registrado\n{Color.White}Introduce tu {Color.IndianRed}email {Color.White}para identificarte en la base de datos", false, "Aceptar", "Cancelar");
                     loginDialog.Response += LoginDialog_Response;
@@ -230,7 +239,7 @@ namespace WashingtonRP.Modules
                     return;
                 }
 
-                Functions.LoadAccount(e.InputText, player);
+                Account.LoadAccount(e.InputText, player);
 
                 var passwordDialog = new InputDialog("Login", $"{Color.White}Introduce tu {Color.LightBlue}contraseña {Color.White}para identificarte en la base de datos", true, "Aceptar", "Cancelar");
                 passwordDialog.Response += PasswordDialog_Response;
@@ -249,7 +258,7 @@ namespace WashingtonRP.Modules
 
         public static void PasswordDialog_Response(object sender, DialogResponseEventArgs e)
         {
-            PlayerData player = e.Player as PlayerData;
+            Player player = e.Player as Player;
 
             if (e.DialogButton == DialogButton.Left)
             {
@@ -261,9 +270,9 @@ namespace WashingtonRP.Modules
                     return;
                 }
 
-                Functions.LoadAccount(e.InputText, player);
+                Account.LoadAccount(e.InputText, player);
 
-                if (!Functions.CheckPassword(e.InputText, player))
+                if (!Account.CheckPassword(e.InputText, player))
                 {
                     var passwordDialog = new InputDialog("Login", $"{Color.Red}Error: {Color.White}Esta contraseña no se encuentra registrada\n{Color.White}Introduce tu {Color.LightBlue}contraseña {Color.White}para registrarte en la base de datos", true, "Aceptar", "Cancelar");
                     passwordDialog.Response += PasswordDialog_Response;
@@ -271,9 +280,9 @@ namespace WashingtonRP.Modules
                     return;
                 }
 
-                Functions.ClearChat(player);
+                Characters.ClearChat(player);
 
-                var characters = Functions.GetCharacters(player);
+                var characters = Characters.GetCharacters(player);
 
                 var dialog = new ListDialog("Selecciona un Personaje.", "Siguiente", "Salir");
 
@@ -296,7 +305,7 @@ namespace WashingtonRP.Modules
             }
             else
             {
-                var passwordDialog = new InputDialog("Login", $"{Color.White}Introduce tu ${Color.LightBlue}contraseña {Color.White}para identificarte en la base de datos", true, "Aceptar", "Cancelar");
+                var passwordDialog = new InputDialog("Login", $"{Color.White}Introduce tu {Color.LightBlue}contraseña {Color.White}para identificarte en la base de datos", true, "Aceptar", "Cancelar");
                 passwordDialog.Response += PasswordDialog_Response;
                 passwordDialog.Show(player);
             }
@@ -304,66 +313,66 @@ namespace WashingtonRP.Modules
 
         public static void TakeInventoryDialog_Response(object sender, DialogResponseEventArgs e)
         {
-            PlayerData player = e.Player as PlayerData;
+            Player player = e.Player as Player;
 
             if (e.DialogButton == DialogButton.Left)
             {
                 if (e.ListItem == 0)
                 {
-                    if (player.Inventory.Slot1.ID == ItemData.Vacio.ID)
+                    if (player.Inventory.Slot1 == Items.Vacio)
                     {
                         player.SendClientMessage("No tienes nada en este slot");
                         return;
                     }
 
-                    Functions.TakeItem(player, 1);
+                    Objects.TakeItem(player, 1);
                 } 
                 else if (e.ListItem == 1)
                 {
-                    if (player.Inventory.Slot2.ID == ItemData.Vacio.ID)
+                    if (player.Inventory.Slot2 == Items.Vacio)
                     {
                         player.SendClientMessage("No tienes nada en este slot");
                         return;
                     }
 
-                    Functions.TakeItem(player, 2);
+                    Objects.TakeItem(player, 2);
                 }
                 else if (e.ListItem == 2)
                 {
-                    if (player.Inventory.Slot3.ID == ItemData.Vacio.ID)
+                    if (player.Inventory.Slot3 == Items.Vacio)
                     {
                         player.SendClientMessage("No tienes nada en este slot");
                         return;
                     }
 
-                    Functions.TakeItem(player, 3);
+                    Objects.TakeItem(player, 3);
                 }
                 else if (e.ListItem == 3)
                 {
-                    if (player.Inventory.Slot4.ID == ItemData.Vacio.ID)
+                    if (player.Inventory.Slot4 == Items.Vacio)
                     {
                         player.SendClientMessage("No tienes nada en este slot");
                         return;
                     }
 
-                    Functions.TakeItem(player, 4);
+                    Objects.TakeItem(player, 4);
                 }
                 else if (e.ListItem == 4)
                 {
-                    if (player.Inventory.Slot5.ID == ItemData.Vacio.ID)
+                    if (player.Inventory.Slot5 == Items.Vacio)
                     {
                         player.SendClientMessage("No tienes nada en este slot");
                         return;
                     }
 
-                    Functions.TakeItem(player, 5);
+                    Objects.TakeItem(player, 5);
                 }
             }
         }
 
         public static void SelectCharacterDialog_Response(object sender, DialogResponseEventArgs e)
         {
-            PlayerData player = e.Player as PlayerData;
+            Player player = e.Player as Player;
 
             if (e.DialogButton == DialogButton.Left)
             {
@@ -379,7 +388,7 @@ namespace WashingtonRP.Modules
                     }
                     else
                     {
-                        Functions.LoadCharacter(player, id);
+                        Characters.LoadCharacter(player, id);
                     }
                 }
                 if (e.ListItem == 1)
@@ -394,7 +403,7 @@ namespace WashingtonRP.Modules
                     }
                     else
                     {
-                        Functions.LoadCharacter(player, id);
+                        Characters.LoadCharacter(player, id);
                     }
                 }
                 if (e.ListItem == 2)
@@ -409,7 +418,7 @@ namespace WashingtonRP.Modules
                     }
                     else
                     {
-                        Functions.LoadCharacter(player, id);
+                        Characters.LoadCharacter(player, id);
                     }
                 }
             }
@@ -422,7 +431,7 @@ namespace WashingtonRP.Modules
 
         public static void CreateCharacterDialog_Response(object sender, DialogResponseEventArgs e)
         {
-            PlayerData player = e.Player as PlayerData;
+            Player player = e.Player as Player;
 
             if (e.DialogButton == DialogButton.Left)
             {
@@ -448,9 +457,9 @@ namespace WashingtonRP.Modules
                     return;
                 }
 
-                Console.WriteLine(player.Email);
+                Console.WriteLine(player.aEmail);
 
-                Functions.CreateCharacter(player, e.InputText);
+                Characters.CreateCharacter(player, e.InputText);
                 player.charactersID.Clear();
             }
             else

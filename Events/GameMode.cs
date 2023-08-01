@@ -1,13 +1,12 @@
 ﻿using SampSharp.GameMode;
 using SampSharp.GameMode.Definitions;
 using SampSharp.GameMode.SAMP;
-using SampSharp.GameMode.SAMP.Commands;
 using System;
-using WashingtonRP.Commands;
+using WashingtonRP.Structures;
 
 namespace WashingtonRP.Events
 {
-    public class GameMode : BaseMode
+    public class GameMode : WashingtonMode
     {
         protected override void OnInitialized(EventArgs e)
         {
@@ -24,6 +23,7 @@ namespace WashingtonRP.Events
             SendRconCommand("mapname Washington");
             SendRconCommand("language Spanish");
             SendRconCommand("hostname [0.3DL] Washington Roleplay - v1.0 - Iniciando...");
+            
 
             ShowPlayerMarkers(PlayerMarkersMode.Global);
             ShowNameTags(true);

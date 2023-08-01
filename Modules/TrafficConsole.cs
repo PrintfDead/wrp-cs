@@ -1,27 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Diagnostics;
+using WashingtonRP.Structures;
+using System.IO;
+using SampSharp.GameMode.Definitions;
 
 namespace WashingtonRP.Modules
 {
     public class TrafficConsole
     {
-        /*
-        ProcessStartInfo psi = new ProcessStartInfo("cmd.exe")
+        public ProcessStartInfo psi;
+        public Process process;
+        public int line = 0;
+
+        public TrafficConsole()
         {
-            RedirectStandardError = true,
-            RedirectStandardInput = true,
-            RedirectStandardOutput = true,
-            UseShellExecute = false
-        };
+            psi = new ProcessStartInfo("cmd.exe")
+            {
+                RedirectStandardError = true,
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                UseShellExecute = false
+            };
 
-        Process p = Process.Start(psi);
+            process = Process.Start(psi);
+        }
 
-        StreamWriter sw = p.StandardInput;
-        StreamReader sr = p.StandardOutput;
+        public void AddUser(Player player)
+        {
+            StreamWriter sw = process.StandardInput;
+            StreamReader sr = process.StandardOutput;
 
-        sw.WriteLine("Hello world!");
-        sr.Close();
-         */
+            sw.NewLine = "\n";
+            while(player.ConnectionStatus == ConnectionStatus.Connected)
+            {
+                sw.WriteLine($"Name: {player.Name} | IP: {player.IP} | Time: {player.ConnectedTime}");
+            }
+
+            sr.Close();
+        }
     }
 }
