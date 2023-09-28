@@ -31,6 +31,17 @@ CREATE TABlE inventario (
 	Slot5 int(11) NOT NULL DEFAULT '0'
 );
 
+CREATE TABlE Belts (
+	ID int(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	Character int (11) NOT NULL,
+	Slot1 int(11) NOT NULL DEFAULT '0',
+	SlotAmount1 int(11) NOT NULL DEFAULT '0',
+	Slot2 int(11) NOT NULL DEFAULT '0',
+	SlotAmount2 int(11) NOT NULL DEFAULT '0',
+	Slot3 int(11) NOT NULL DEFAULT '0',
+	SlotAmount3 int(11) NOT NULL DEFAULT '0'
+);
+
 ALTER TABLE personajes
 	ADD Crack int(11) NOT NULL DEFAULT '0';
 

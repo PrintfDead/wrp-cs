@@ -42,6 +42,7 @@ namespace WashingtonRP.Events
 
             if (pCrack)
             {
+                ToggleSpectating(false);
                 ToggleControllable(false);
 
                 Health = 25.0f;
@@ -54,21 +55,21 @@ namespace WashingtonRP.Events
                 RemoveAttachedObject(7);
                 ResetWeapons();
 
-                if (RightHand != Items.Vacio)
+                if (Hand[0].Item != Items.Vacio)
                 {
-                    if (RightHand.IDGun > 0)
+                    if (Hand[0].Item.IDGun > 0)
                     {
-                        if (RightHandAmount > 0)
+                        if (Hand[0].Amount > 0)
                         {
-                            GiveWeapon(Objects.GetWeapon(RightHand.IDGun), RightHandAmount);
+                            GiveWeapon(Objects.GetWeapon(Hand[0].Item.IDGun), Hand[0].Amount);
                         }
                     }
 
-                    Objects.PutObject(this, RightHand, 1);
+                    Objects.PutObject(this, Hand[0].Item, 1);
                 }
-                else if (LeftHand != Items.Vacio)
+                else if (Hand[1].Item != Items.Vacio)
                 {
-                    Objects.PutObject(this, LeftHand, 2);
+                    Objects.PutObject(this, Hand[1].Item, 2);
                 }
 
                 ApplyAnimation("WUZI", "CS_Dead_Guy", 4.0f, false, true, true, true, 0);
@@ -84,6 +85,7 @@ namespace WashingtonRP.Events
 
             Position = pPositions;
             Rotation = new Vector3(pRotation);
+            //SetSpawnInfo(0, pSkin, pPositions, pRotation);
             Interior = pInterior;
             VirtualWorld = pVirtualWorld;
 
@@ -95,21 +97,21 @@ namespace WashingtonRP.Events
             RemoveAttachedObject(7);
             ResetWeapons();
 
-            if (RightHand != Items.Vacio)
+            if (Hand[0].Item != Items.Vacio)
             {
-                if (RightHand.IDGun > 0)
+                if (Hand[0].Item.IDGun > 0)
                 {
-                    if (RightHandAmount > 0)
+                    if (Hand[0].Amount > 0)
                     {
-                        GiveWeapon(Objects.GetWeapon(RightHand.IDGun), RightHandAmount);
+                        GiveWeapon(Objects.GetWeapon(Hand[0].Item.IDGun), Hand[0].Amount);
                     }
                 }
 
-                Objects.PutObject(this, RightHand, 1);
+                Objects.PutObject(this, Hand[0].Item, 1);
             }
-            else if (LeftHand != Items.Vacio)
+            else if (Hand[1].Item != Items.Vacio)
             {
-                Objects.PutObject(this, LeftHand, 2);
+                Objects.PutObject(this, Hand[1].Item, 2);
             }
         }
 
@@ -162,20 +164,22 @@ namespace WashingtonRP.Events
         {
             base.OnUpdate(e);
 
-            if (RightHand != Items.Vacio)
+            if (Hand == null) return;
+
+            if (Hand[0].Item != Items.Vacio)
             {
-                if (Objects.GetWeapon(Weapon) != RightHand.IDGun && RightHandAmount >= 1)
+                if (Objects.GetWeapon(Weapon) != Hand[0].Item.IDGun && Hand[0].Amount >= 1)
                 {
-                    if (RightHandAmount > 0 && WeaponAmmo == 0) 
+                    if (Hand[0].Amount > 0 && WeaponAmmo == 0) 
                     {
                         ResetWeapons();
-                        GiveWeapon(Objects.GetWeapon(RightHand.IDGun), RightHandAmount);
+                        GiveWeapon(Objects.GetWeapon(Hand[0].Item.IDGun), Hand[0].Amount);
                     }
 
                     //SetArmedWeapon(Objects.GetWeapon(RightHand.IDGun));
                     return;
                 }
-                else if (RightHandAmount == 0)
+                else if (Hand[0].Amount == 0)
                 {
                     if (Weapon != SampSharp.GameMode.Definitions.Weapon.None)
                     {
@@ -201,27 +205,27 @@ namespace WashingtonRP.Events
                 Kick();
             }
 
-            if (RightHandAmount > 0)
+            if (Hand[0].Amount > 0)
             {
-                Console.WriteLine(RightHandAmount);
+                Console.WriteLine(Hand[0].Amount);
                 Console.WriteLine(WeaponAmmo);
-                RightHandAmount--;
+                Hand[0].Amount--;
 
-                if (WeaponAmmo != RightHandAmount && WeaponAmmo == 1)
+                if (WeaponAmmo != Hand[0].Amount && WeaponAmmo == 1)
                 {
                     Console.WriteLine("No tiene balas");
-                    RightHandAmount = 0;
+                    Hand[0].Amount = 0;
                     ResetWeapons();
                     return;
                 }
 
-                if (WeaponAmmo != 0 && WeaponAmmo > RightHandAmount)
+                if (WeaponAmmo != 0 && WeaponAmmo > Hand[0].Amount)
                 {
-                    RightHandAmount = WeaponAmmo;
+                    Hand[0].Amount = WeaponAmmo;
                     return;
                 }
 
-                if (RightHandAmount == 0 && WeaponAmmo == 0)
+                if (Hand[0].Amount == 0 && WeaponAmmo == 0)
                 {
                     Console.WriteLine("Reseteo de armas");
                     ResetWeapons();
@@ -239,7 +243,7 @@ namespace WashingtonRP.Events
                 }
             }
 
-            if (RightHand == Items.Taser && e.Weapon == Objects.GetWeapon(23))
+            if (Hand[0].Item == Items.Taser && e.Weapon == Objects.GetWeapon(23))
             {
                 InTaserReload = true;
 
@@ -276,7 +280,7 @@ namespace WashingtonRP.Events
             {
                 player.Health = 0;
             }
-            else if ((player.Health - weapon.BonusDamage) < 0)
+            else if ((player.Health - weapon.BonusDamage) <= 0)
             {
                 player.Health = 0;
             }

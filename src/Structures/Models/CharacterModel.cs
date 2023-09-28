@@ -24,10 +24,10 @@ namespace WashingtonRP.Structures.Models
         public int RightHandAmount { get; set; }
         public int LeftHand { get; set; }
         public int LeftHandAmount { get; set; }
-        public int RightDoll { get; set; }
-        public int RightDollAmount { get; set; }
-        public int LeftDoll { get; set; }
-        public int LeftDollAmount { get; set; }
+        public int RightWrist { get; set; }
+        public int RightWristAmount { get; set; }
+        public int LeftWrist { get; set; }
+        public int LeftWristAmount { get; set; }
         public int Crack { get; set; }
         public int Admin { get; set; }
     }

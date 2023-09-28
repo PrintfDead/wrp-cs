@@ -8,13 +8,10 @@ namespace WashingtonRP.Modules
     {
         public static void PutChatAme(Player player, string text)
         {
-            if (player.pCrack == false)
-            {
-                Color color = new Color(208, 174, 235);
+            Color color = new Color(208, 174, 235);
 
-                player.SendClientMessage(color, $"> {text}");
-                player.SetChatBubble($"> {text}", color, (float)15.0, 1000);
-            }
+            player.SendClientMessage(color, $"> {text}");
+            player.SetChatBubble($"> {text}", color, (float)15.0, 1000);
         }
 
         public static void SendMessageProx(float radius, Player player, string text, Color col1, Color col2, Color col3, Color col4, Color col5)

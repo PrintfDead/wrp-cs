@@ -15,6 +15,7 @@ namespace WashingtonRP.Events
             Console.WriteLine("\n----------------------------------");
             Console.WriteLine(" Blank game mode by your name here");
             Console.WriteLine("----------------------------------\n");
+            Console.WriteLine("Nashe");
 
             
             SetGameModeText("Roleplay");
@@ -23,7 +24,8 @@ namespace WashingtonRP.Events
             SendRconCommand("mapname Washington");
             SendRconCommand("language Spanish");
             SendRconCommand("hostname [0.3DL] Washington Roleplay - v1.0 - Iniciando...");
-            
+
+            AddPlayerClass(0, new Vector3(0, 0, 0), 0);
 
             ShowPlayerMarkers(PlayerMarkersMode.Global);
             ShowNameTags(true);

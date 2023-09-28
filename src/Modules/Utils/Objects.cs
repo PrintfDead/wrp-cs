@@ -11,8 +11,8 @@ namespace WashingtonRP.Modules.Utils
     {
         public static void TakeItem(Player player, int id)
         {
-            Item Slot = player.Inventory.GetSlot(id);
-            int SlotAmount = player.Inventory.GetSlotAmount(id);
+            Item Slot = player.Inventory.GetSlot(id).Item;
+            int SlotAmount = player.Inventory.GetSlot(id).Amount;
 
             if (Slot == Items.Vacio)
             {
@@ -20,7 +20,7 @@ namespace WashingtonRP.Modules.Utils
                 return;
             }
 
-            if (player.RightHand == Items.Vacio)
+            if (player.Hand[0].Item == Items.Vacio)
             {
                 Console.WriteLine($"{Slot.Name}");
                 if (Slot.IDGun > 0)
@@ -30,29 +30,29 @@ namespace WashingtonRP.Modules.Utils
                         player.GiveWeapon(GetWeapon(Slot.IDGun), SlotAmount);
                     }
                 }
-                player.RightHand = Slot;
-                player.RightHandAmount = SlotAmount;
+                player.Hand[0].Item = Slot;
+                player.Hand[0].Amount = SlotAmount;
 
-                PutObject(player, player.RightHand, 1);
+                PutObject(player, player.Hand[0].Item, 1);
 
                 Console.WriteLine("Colocando y sacando item del inventario");
 
                 player.Inventory.TakeSlot(id);
-                Message.PutChatAme(player, $"saco {player.RightHand.Name} de sus bolsillos");
+                Message.PutChatAme(player, $"saco {player.Hand[0].Item.Name} de sus bolsillos");
             }
-            else if (player.LeftHand == Items.Vacio)
+            else if (player.Hand[1].Item == Items.Vacio)
             {
                 Console.WriteLine("Buscando item");
-                player.LeftHand = Slot;
-                player.LeftHandAmount = SlotAmount;
+                player.Hand[1].Item = Slot;
+                player.Hand[1].Amount = SlotAmount;
 
-                PutObject(player, player.LeftHand, 2);
+                PutObject(player, player.Hand[1].Item, 2);
 
                 Console.WriteLine("Colocando y sacando item del inventario");
 
                 player.Inventory.TakeSlot(id);
 
-                Message.PutChatAme(player, $"saco {player.LeftHand.Name} de sus bolsillos");
+                Message.PutChatAme(player, $"saco {player.Hand[1].Item.Name} de sus bolsillos");
             }
             else
             {
@@ -283,11 +283,11 @@ namespace WashingtonRP.Modules.Utils
                 .Where(x => x.ID == player.pID)
                 .ToList();
 
-            player.RightHand = Items.Vacio;
-            player.RightHandAmount = 0;
+            player.Hand[0].Item = Items.Vacio;
+            player.Hand[0].Amount = 0;
 
-            player.LeftHand = Items.Vacio;
-            player.LeftHandAmount = 0;
+            player.Hand[1].Item = Items.Vacio;
+            player.Hand[1].Amount = 0;
 
             player.RemoveAttachedObject(7);
             player.RemoveAttachedObject(8);
@@ -296,10 +296,10 @@ namespace WashingtonRP.Modules.Utils
 
             foreach (var x in character)
             {          
-                x.RightHand = player.RightHand.ID;
-                x.RightHandAmount = player.RightHandAmount;
-                x.LeftHand = player.LeftHand.ID;
-                x.LeftHandAmount = player.LeftHandAmount;
+                x.RightHand = player.Hand[0].Item.ID;
+                x.RightHandAmount = player.Hand[0].Amount;
+                x.LeftHand = player.Hand[1].Item.ID;
+                x.LeftHandAmount = player.Hand[1].Amount;
             }
 
             context.SaveChanges();

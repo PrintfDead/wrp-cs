@@ -27,15 +27,8 @@ namespace WashingtonRP.Structures
         public Admin pAdmin { get; set; }
 
         // Inventory data
-        public Item RightHand { get; set; }
-        public int RightHandAmount { get; set; }
-        public Item LeftHand { get; set; }
-        public int LeftHandAmount { get; set; }
-        public Item RightDoll { get; set; }
-        public int RightDollAmount { get; set; }
-        public Item LeftDoll { get; set; }
-        public int LeftDollAmount { get; set; }
-
+        public List<Hand> Hand { get; set; }
+        public List<Wrist> Wrist { get; set; }
         public Inventories Inventory { get; set; }
 
         // Temp Data

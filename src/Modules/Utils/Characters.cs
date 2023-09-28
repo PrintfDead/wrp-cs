@@ -90,10 +90,39 @@ namespace WashingtonRP.Modules.Utils
                 player.pSkin = x.Skin;
                 player.pCrack = x.Crack == 1 ? true : false;
 
-                player.RightHand = Items.GetItem(x.RightHand);
-                player.RightHandAmount = x.RightHandAmount;
-                player.LeftHand = Items.GetItem(x.LeftHand);
-                player.LeftHandAmount = x.LeftHandAmount;
+                player.Hand = new List<Hand>
+                {
+                    new Hand
+                    {
+                        Position = false,
+                        Item = Items.GetItem(x.RightHand),
+                        Amount = x.RightHandAmount
+                    },
+
+                    new Hand
+                    {
+                        Position = true,
+                        Item = Items.GetItem(x.LeftHand),
+                        Amount = x.LeftHandAmount
+                    }
+                };
+
+                player.Wrist = new List<Wrist>
+                {
+                    new Wrist
+                    {
+                        Position = false,
+                        Item = Items.GetItem(x.RightWrist),
+                        Amount = x.RightWristAmount
+                    },
+
+                    new Wrist
+                    {
+                        Position = true,
+                        Item = Items.GetItem(x.LeftWrist),
+                        Amount = x.LeftWristAmount
+                    }
+                };
 
                 switch (x.Admin)
                 {
@@ -130,24 +159,52 @@ namespace WashingtonRP.Modules.Utils
 
             inventory.ForEach(x =>
             {
+                var list = new List<Slot>
+                {
+                    new Slot
+                    {
+                        ID = 1,
+                        Item = Items.GetItem(x.Slot1),
+                        Amount = x.SlotAmount1
+                    },
+                    new Slot
+                    {
+                        ID = 2,
+                        Item = Items.GetItem(x.Slot2),
+                        Amount = x.SlotAmount2
+                    },
+                    new Slot
+                    {
+                        ID = 3,
+                        Item = Items.GetItem(x.Slot3),
+                        Amount = x.SlotAmount3
+                    },
+                    new Slot
+                    {
+                        ID = 4,
+                        Item = Items.GetItem(x.Slot4),
+                        Amount = x.SlotAmount4
+                    },
+                    new Slot
+                    {
+                        ID = 5,
+                        Item = Items.GetItem(x.Slot5),
+                        Amount = x.SlotAmount5
+                    }
+                };
+
+                Console.WriteLine(list);
+
                 player.Inventory = new Inventories
                 {
                     ID = x.ID,
-                    Slot1 = Items.GetItem(x.Slot1),
-                    SlotAmount1 = x.SlotAmount1,
-                    Slot2 = Items.GetItem(x.Slot2),
-                    SlotAmount2 = x.SlotAmount2,
-                    Slot3 = Items.GetItem(x.Slot3),
-                    SlotAmount3 = x.SlotAmount3,
-                    Slot4 = Items.GetItem(x.Slot4),
-                    SlotAmount4 = x.SlotAmount4,
-                    Slot5 = Items.GetItem(x.Slot5),
-                    SlotAmount5 = x.SlotAmount5,
+                    Slot = list
                 };
             });
 
             player.InLogin = false;
             player.Name = player.pName;
+
             player.Spawn();
         }
 
@@ -195,14 +252,10 @@ namespace WashingtonRP.Modules.Utils
                 x.Health = player.Health;
                 x.Chaleco = player.Armour;
                 x.Skin = player.Skin;
-                x.RightHand = player.RightHand.ID;
-                x.RightHandAmount = player.RightHandAmount;
-                x.LeftHand = player.LeftHand.ID;
-                x.LeftHandAmount = player.LeftHandAmount;
-                x.RightDoll = player.RightDoll.ID;
-                x.RightDollAmount = player.RightDollAmount;
-                x.LeftDoll = player.LeftDoll.ID;
-                x.LeftDollAmount = player.LeftDollAmount;
+                x.RightHand = player.Hand[0].Item.ID;
+                x.RightHandAmount = player.Hand[0].Amount;
+                x.LeftHand = player.Hand[1].Item.ID;
+                x.LeftHandAmount = player.Hand[1].Amount;
                 x.Crack = player.pCrack == true ? 1 : 0;
                 x.Admin = admin;
             }
@@ -217,16 +270,16 @@ namespace WashingtonRP.Modules.Utils
             foreach(var x in inventory)
             {
                 x.Character = player.pID;
-                x.Slot1 = player.Inventory.Slot1.ID;
-                x.SlotAmount1 = player.Inventory.SlotAmount1;
-                x.Slot2 = player.Inventory.Slot2.ID;
-                x.SlotAmount2 = player.Inventory.SlotAmount2;
-                x.Slot3 = player.Inventory.Slot3.ID;
-                x.SlotAmount3 = player.Inventory.SlotAmount3;
-                x.Slot4 = player.Inventory.Slot4.ID;
-                x.SlotAmount4 = player.Inventory.SlotAmount4;
-                x.Slot5 = player.Inventory.Slot5.ID;
-                x.SlotAmount5 = player.Inventory.SlotAmount5;
+                x.Slot1 = player.Inventory.Slot[0].Item.ID;
+                x.SlotAmount1 = player.Inventory.Slot[0].Amount;
+                x.Slot2 = player.Inventory.Slot[1].Item.ID;
+                x.SlotAmount2 = player.Inventory.Slot[1].Amount;
+                x.Slot3 = player.Inventory.Slot[2].Item.ID;
+                x.SlotAmount3 = player.Inventory.Slot[2].Amount;
+                x.Slot4 = player.Inventory.Slot[3].Item.ID;
+                x.SlotAmount4 = player.Inventory.Slot[3].Amount;
+                x.Slot5 = player.Inventory.Slot[4].Item.ID;
+                x.SlotAmount5 = player.Inventory.Slot[4].Amount;
             }
 
             context.SaveChanges();
@@ -251,10 +304,10 @@ namespace WashingtonRP.Modules.Utils
                 RightHandAmount = 1,
                 LeftHand = 0,
                 LeftHandAmount = 0,
-                RightDoll = 0,
-                RightDollAmount = 0,
-                LeftDoll = 0,
-                LeftDollAmount = 0,
+                RightWrist = 0,
+                RightWristAmount = 0,
+                LeftWrist = 0,
+                LeftWristAmount = 0,
                 Crack = 0,
                 Admin = 0
             };
@@ -293,22 +346,74 @@ namespace WashingtonRP.Modules.Utils
             player.Inventory = new Inventories
             {
                 ID = (int)newinventory.GetDatabaseValues()["ID"],
-                Slot1 = Items.GetItem(inventory.Slot1),
-                SlotAmount1 = inventory.SlotAmount1,
-                Slot2 = Items.GetItem(inventory.Slot2),
-                SlotAmount2 = inventory.SlotAmount2,
-                Slot3 = Items.GetItem(inventory.Slot3),
-                SlotAmount3 = inventory.SlotAmount3,
-                Slot4 = Items.GetItem(inventory.Slot4),
-                SlotAmount4 = inventory.SlotAmount4,
-                Slot5 = Items.GetItem(inventory.Slot5),
-                SlotAmount5 = inventory.SlotAmount5,
+                Slot = new List<Slot>
+                {
+                    new Slot
+                    {
+                        ID = 1,
+                        Item = Items.Vacio,
+                        Amount = 0
+                    },
+                    new Slot
+                    {
+                        ID = 2,
+                        Item = Items.Vacio,
+                        Amount = 0
+                    },
+                    new Slot
+                    {
+                        ID = 3,
+                        Item = Items.Vacio,
+                        Amount = 0
+                    },
+                    new Slot
+                    {
+                        ID = 4,
+                        Item = Items.Vacio,
+                        Amount = 0
+                    },
+                    new Slot
+                    {
+                        ID = 5,
+                        Item = Items.Vacio,
+                        Amount = 0
+                    }
+                }
             };
 
-            player.RightHand = Items.GetItem(character.RightHand);
-            player.RightHandAmount = character.RightHandAmount;
-            player.LeftHand = Items.GetItem(character.LeftHand);
-            player.LeftHandAmount = character.LeftHandAmount;
+            player.Hand = new List<Hand>
+            {
+                new Hand
+                {
+                    Position = false,
+                    Item = Items.GetItem(character.RightHand),
+                    Amount = character.RightHandAmount
+                },
+
+                new Hand
+                {
+                    Position = true,
+                    Item = Items.GetItem(character.LeftHand),
+                    Amount = character.LeftHandAmount
+                }
+            };
+
+            player.Wrist = new List<Wrist>
+            {
+                new Wrist
+                {
+                    Position = false,
+                    Item = Items.GetItem(character.RightWrist),
+                    Amount = character.RightWristAmount
+                },
+
+                new Wrist
+                {
+                    Position = true,
+                    Item = Items.GetItem(character.LeftWrist),
+                    Amount = character.LeftWristAmount
+                }
+            };
 
             player.Health = player.pHealth;
             player.Armour = player.pChaleco;
@@ -345,14 +450,8 @@ namespace WashingtonRP.Modules.Utils
             player.pCrack = false;
 
             // Inventory Vars
-            player.RightHand = Items.Vacio;
-            player.RightHandAmount = 0;
-            player.LeftHand = Items.Vacio;
-            player.LeftHandAmount = 0;
-            player.RightDoll = Items.Vacio;
-            player.RightDollAmount = 0;
-            player.LeftDoll = Items.Vacio;
-            player.LeftDollAmount = 0;
+            player.Hand = null;
+            player.Wrist = null;
             player.Inventory = null;
         }
 
@@ -366,6 +465,20 @@ namespace WashingtonRP.Modules.Utils
 
             return name;
 
+        }
+
+        public static string GetAdminName(Admin admin)
+        {
+            switch (admin)
+            {
+                case Admin.None: return "none";
+                case Admin.Helper: return "Helper";
+                case Admin.Moderator: return "Moderator";
+                case Admin.Admin: return "Admin";
+                case Admin.SeniorAdmin: return "Senior Admin";
+                case Admin.Manager: return "Manager";
+                default: return "none";
+            }
         }
 
         public static void ClearChat(Player player)

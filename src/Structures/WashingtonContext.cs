@@ -17,7 +17,7 @@ namespace WashingtonRP.Structures
             var serverVersion = new MySqlServerVersion(new Version(8, 0, 31));
 
             optionsBuilder.UseMySql("server=localhost;user=root;password=;database=washington", serverVersion);
-            optionsBuilder.LogTo(Console.WriteLine, LogLevel.Trace);
+            //optionsBuilder.LogTo(Console.WriteLine, LogLevel.Trace);
             optionsBuilder.EnableSensitiveDataLogging();
             optionsBuilder.EnableDetailedErrors();
 
@@ -27,5 +27,6 @@ namespace WashingtonRP.Structures
         public DbSet<CharacterModel> Characters { get; set; }
         public DbSet<AccountModel> Accounts { get; set; }
         public DbSet<InventoryModel> Inventories { get; set; }
+        public DbSet<BeltModel> Belts { get; set; }
     }
 }

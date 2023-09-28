@@ -317,56 +317,19 @@ namespace WashingtonRP.Modules
 
             if (e.DialogButton == DialogButton.Left)
             {
-                if (e.ListItem == 0)
+                player.Inventory.Slot.ForEach(x =>
                 {
-                    if (player.Inventory.Slot1 == Items.Vacio)
+                    if (x.ID == e.ListItem + 1)
                     {
-                        player.SendClientMessage("No tienes nada en este slot");
-                        return;
-                    }
+                        if (x.Item == Items.Vacio)
+                        {
+                            player.SendClientMessage("No tienes nada en este slot");
+                            return;
+                        }
 
-                    Objects.TakeItem(player, 1);
-                } 
-                else if (e.ListItem == 1)
-                {
-                    if (player.Inventory.Slot2 == Items.Vacio)
-                    {
-                        player.SendClientMessage("No tienes nada en este slot");
-                        return;
+                        Objects.TakeItem(player, x.ID);
                     }
-
-                    Objects.TakeItem(player, 2);
-                }
-                else if (e.ListItem == 2)
-                {
-                    if (player.Inventory.Slot3 == Items.Vacio)
-                    {
-                        player.SendClientMessage("No tienes nada en este slot");
-                        return;
-                    }
-
-                    Objects.TakeItem(player, 3);
-                }
-                else if (e.ListItem == 3)
-                {
-                    if (player.Inventory.Slot4 == Items.Vacio)
-                    {
-                        player.SendClientMessage("No tienes nada en este slot");
-                        return;
-                    }
-
-                    Objects.TakeItem(player, 4);
-                }
-                else if (e.ListItem == 4)
-                {
-                    if (player.Inventory.Slot5 == Items.Vacio)
-                    {
-                        player.SendClientMessage("No tienes nada en este slot");
-                        return;
-                    }
-
-                    Objects.TakeItem(player, 5);
-                }
+                });
             }
         }
 

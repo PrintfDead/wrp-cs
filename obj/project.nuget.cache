@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "B+506GN5s/z5pze6RVd5ScocJshxpvUkI6/tY5TnA+D08fo7mkJMGfGkvd5980WC55oXOrimu7ecEoRLOvgIrA==",
+  "dgSpecHash": "IhHPlk7vUZUHkY3bv/+eUvrEO2GzAEzzIhLd4bF0b3x1kC9xIBAGyPatFPT2M9OsRdYfaQcfU/+Yzu1zErdP9Q==",
   "success": true,
   "projectFilePath": "C:\\Users\\rippr\\Documents\\WashingtonRP\\WashingtonRP.csproj",
   "expectedPackageFiles": [
@@ -110,8 +110,8 @@
     "C:\\Users\\rippr\\.nuget\\packages\\system.threading.thread\\4.3.0\\system.threading.thread.4.3.0.nupkg.sha512",
     "C:\\Users\\rippr\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512",
     "C:\\Users\\rippr\\.nuget\\packages\\zstdsharp.port\\0.7.1\\zstdsharp.port.0.7.1.nupkg.sha512",
-    "C:\\Users\\rippr\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\3.1.0\\microsoft.windowsdesktop.app.ref.3.1.0.nupkg.sha512",
     "C:\\Users\\rippr\\.nuget\\packages\\microsoft.netcore.app.ref\\3.1.0\\microsoft.netcore.app.ref.3.1.0.nupkg.sha512",
+    "C:\\Users\\rippr\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\3.1.0\\microsoft.windowsdesktop.app.ref.3.1.0.nupkg.sha512",
     "C:\\Users\\rippr\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.10\\microsoft.aspnetcore.app.ref.3.1.10.nupkg.sha512",
     "C:\\Users\\rippr\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.32\\microsoft.netcore.app.host.win-x64.3.1.32.nupkg.sha512"
   ],
